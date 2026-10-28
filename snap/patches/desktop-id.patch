@@ -1,0 +1,9 @@
+--- a/crates/gitcomet/src/main.rs
++++ b/crates/gitcomet/src/main.rs
+@@ -28,3 +28,5 @@
+ fn main() -> ! {
+-    gitcomet_app::App::new().run()
++    gitcomet_app::App::new()
++        .identity(gitcomet_core::identity::ProductIdentity::gitcomet().with_app_id("gitcomet_gitcomet"))
++        .run()
+ }

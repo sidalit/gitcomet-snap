@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=GitComet
+Comment=Browse repositories, review changes and resolve Git conflicts
+Exec=gitcomet %F
+Icon=${SNAP}/meta/gui/gitcomet.png
+StartupWMClass=gitcomet_gitcomet
+Terminal=false
+Categories=Development;RevisionControl;

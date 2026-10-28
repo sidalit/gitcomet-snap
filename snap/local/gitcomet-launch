@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+(
+    umask 077
+    mkdir -p "$SNAP_USER_COMMON/ssh"
+)
+# OpenSSH reads connected host keys, but new host trust belongs in snap data.
+export GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o UserKnownHostsFile=\"\$SNAP_USER_COMMON/ssh/known_hosts\"}"
+exec "$SNAP/bin/gitcomet" "$@"

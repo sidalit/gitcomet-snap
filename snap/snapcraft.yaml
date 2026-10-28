@@ -1,0 +1,101 @@
+name: gitcomet
+base: core26
+version: '0.3.2'
+title: GitComet
+icon: snap/gui/gitcomet.png
+summary: A fast native desktop client for Git
+description: |
+  GitComet is a native Git client with commit history, staging, branching,
+  diffs and merge conflict resolution. Work with submodules, worktrees,
+  Git LFS and git-annex, and use the built-in terminal and theme support.
+license: AGPL-3.0-only
+grade: stable
+confinement: strict
+website: https://gitcomet.dev
+source-code:
+  - https://github.com/Auto-Explore/GitComet
+  - https://github.com/sidalit/gitcomet-snap
+issues:
+  - https://github.com/Auto-Explore/GitComet/issues
+  - https://github.com/sidalit/gitcomet-snap/issues
+contact: https://github.com/sidalit/gitcomet-snap/issues
+
+platforms:
+  amd64:
+  arm64:
+
+apps:
+  gitcomet:
+    command: bin/gitcomet-launch
+    extensions: [gnome]
+    plugs:
+      - home
+      - network
+      - network-bind
+      - removable-media
+      - ssh-keys
+    environment:
+      PATH: $SNAP/bin:$SNAP/usr/bin:$PATH
+      GIT_EXEC_PATH: $SNAP/usr/lib/git-core
+      GIT_TEMPLATE_DIR: $SNAP/usr/share/git-core/templates
+      GITCOMET_NO_DESKTOP_INSTALL: '1'
+      XDG_STATE_HOME: $SNAP_USER_DATA/.local/state
+      SHELL: /bin/bash
+
+layout:
+  /usr/bin/gpg-agent:
+    symlink: $SNAP/usr/bin/gpg-agent
+  /usr/bin/dirmngr:
+    symlink: $SNAP/usr/bin/dirmngr
+  /usr/bin/pinentry:
+    symlink: $SNAP/usr/bin/pinentry-gtk2
+
+parts:
+  git-tools:
+    plugin: nil
+    stage-packages:
+      - git
+      - git-lfs
+      - git-annex
+      - openssh-client
+      - gnupg
+      - pinentry-gtk2
+
+  gitcomet:
+    plugin: rust
+    source: https://github.com/Auto-Explore/GitComet.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    source-depth: 1
+    source-submodules: []
+    rust-channel: '1.99.1'
+    rust-ignore-toolchain-file: true
+    rust-path: [crates/gitcomet]
+    rust-cargo-parameters: [--bin, gitcomet]
+    build-environment:
+      - to amd64:
+          - RUSTFLAGS: '-C target-cpu=x86-64'
+    build-packages:
+      - build-essential
+      - clang
+      - mold
+      - pkg-config
+      - libfontconfig-dev
+      - libxcb1-dev
+      - libxkbcommon-dev
+      - libxkbcommon-x11-dev
+      - libwayland-dev
+      - patch
+    stage-packages:
+      - libxkbcommon-x11-0
+    override-pull: |
+      craftctl default
+      patch -p1 < "$CRAFT_PROJECT_DIR/snap/patches/desktop-id.patch"
+    override-build: |
+      craftctl default
+      install -Dm755 "$CRAFT_PROJECT_DIR/snap/local/gitcomet-launch" \
+        "$CRAFT_PART_INSTALL/bin/gitcomet-launch"
+      install -Dm644 "$CRAFT_PROJECT_DIR/snap/gui/gitcomet.png" \
+        "$CRAFT_PART_INSTALL/usr/share/icons/hicolor/256x256/apps/gitcomet_gitcomet.png"
+      install -Dm644 LICENSE-AGPL-3.0 "$CRAFT_PART_INSTALL/usr/share/doc/gitcomet/LICENSE"
+      install -Dm644 crates/gitcomet-ui-gpui/assets/open_source_licenses.tsv \
+        "$CRAFT_PART_INSTALL/usr/share/doc/gitcomet/open_source_licenses.tsv"
