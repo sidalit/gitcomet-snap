@@ -84,18 +84,14 @@ parts:
       - libxkbcommon-dev
       - libxkbcommon-x11-dev
       - libwayland-dev
-      - patch
     stage-packages:
       - libxkbcommon-x11-0
-    override-pull: |
-      craftctl default
-      patch -p1 < "$CRAFT_PROJECT_DIR/snap/patches/desktop-id.patch"
     override-build: |
       craftctl default
       install -Dm755 "$CRAFT_PROJECT_DIR/snap/local/gitcomet-launch" \
         "$CRAFT_PART_INSTALL/bin/gitcomet-launch"
       install -Dm644 "$CRAFT_PROJECT_DIR/snap/gui/gitcomet.png" \
-        "$CRAFT_PART_INSTALL/usr/share/icons/hicolor/256x256/apps/gitcomet_gitcomet.png"
+        "$CRAFT_PART_INSTALL/usr/share/icons/hicolor/256x256/apps/gitcomet.png"
       install -Dm644 LICENSE-AGPL-3.0 "$CRAFT_PART_INSTALL/usr/share/doc/gitcomet/LICENSE"
       install -Dm644 crates/gitcomet-ui-gpui/assets/open_source_licenses.tsv \
         "$CRAFT_PART_INSTALL/usr/share/doc/gitcomet/open_source_licenses.tsv"
