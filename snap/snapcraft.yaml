@@ -1,6 +1,6 @@
 name: gitcomet
 base: core26
-version: '0.3.3'
+version: '0.3.4'
 title: GitComet
 icon: snap/gui/gitcomet.png
 summary: A fast native desktop client for Git
