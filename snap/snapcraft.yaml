@@ -67,7 +67,7 @@ parts:
     source-tag: v$SNAPCRAFT_PROJECT_VERSION
     source-depth: 1
     source-submodules: []
-    rust-channel: '1.99.1'
+    rust-channel: stable
     rust-ignore-toolchain-file: true
     rust-path: [crates/gitcomet]
     rust-cargo-parameters: [--bin, gitcomet]
